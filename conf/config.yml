@@ -1,0 +1,11 @@
+port: 8070
+
+log:
+  logPath: ./logs
+  logName: bot-connector
+
+mysql:
+  user: root
+  password: xiaoguang
+  address: 127.0.0.1:3306
+  name: jbot_db
