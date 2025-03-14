@@ -1,6 +1,7 @@
 package apis
 
 import (
+	"bot-connector/apimodels"
 	"bot-connector/errs"
 	"bot-connector/services"
 	"encoding/json"
@@ -10,29 +11,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 )
-
-func TeleBotSendText(ctx *gin.Context) {
-	var msg services.TextMsg
-	if err := ctx.BindJSON(&msg); err != nil {
-		ctx.JSON(http.StatusBadRequest, errs.GetErrorResp(errs.ErrorCode_ParamErr))
-		return
-	}
-	code := services.TeleBotSendText(services.ToCtx(ctx), &msg)
-	if code != errs.ErrorCode_Success {
-		ctx.JSON(http.StatusOK, errs.GetErrorResp(code))
-	} else {
-		ctx.JSON(http.StatusOK, errs.GetSuccessResp(nil))
-	}
-}
-
-func TeleTest(ctx *gin.Context) {
-	var msg Event
-	err := ctx.BindJSON(&msg)
-	fmt.Println(err)
-	bs, _ := json.Marshal(msg)
-	fmt.Println(string(bs))
-
-}
 
 func TeleBotEvents(ctx *gin.Context) {
 	var event Event
@@ -85,4 +63,24 @@ type MsgEvent struct {
 type MentionInfo struct {
 	MentionType   string   `json:"mention_type"`
 	TargetUserIds []string `json:"target_user_ids"`
+}
+
+func TeleBotAdd(ctx *gin.Context) {
+	var req apimodels.TeleBot
+	if err := ctx.BindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errs.GetErrorResp(errs.ErrorCode_ParamErr))
+		return
+	}
+	code := services.TeleBotAdd(services.ToCtx(ctx), &req)
+	ctx.JSON(http.StatusOK, errs.GetErrorResp(code))
+}
+
+func TeleBotDel(ctx *gin.Context) {
+	var req apimodels.TeleBot
+	if err := ctx.BindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errs.GetErrorResp(errs.ErrorCode_ParamErr))
+		return
+	}
+	code := services.TeleBotDel(services.ToCtx(ctx), &req)
+	ctx.JSON(http.StatusOK, errs.GetErrorResp(code))
 }

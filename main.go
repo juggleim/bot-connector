@@ -29,9 +29,9 @@ func main() {
 	httpServer.Use(CorsHandler())
 	httpServer.Use(apis.Validate)
 	group := httpServer.Group("/bot-connector")
-	group.POST("/telebot/send/text", apis.TeleBotSendText)
 	group.POST("/telebot/events", apis.TeleBotEvents)
-	group.POST("/test", apis.TeleTest)
+	group.POST("/telebot/add", apis.TeleBotAdd)
+	group.POST("/telebot/del", apis.TeleBotDel)
 	fmt.Println("Start Server with port:", configures.Config.Port)
 	httpServer.Run(fmt.Sprintf(":%d", configures.Config.Port))
 }

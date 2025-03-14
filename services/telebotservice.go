@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bot-connector/apimodels"
 	"bot-connector/dbs"
 	"bot-connector/errs"
 	"bot-connector/utils"
@@ -84,6 +85,12 @@ func (bot *TeleBot) Start() {
 	}
 }
 
+func (bot *TeleBot) Stop() {
+	if bot.isStarted {
+		bot.botInstance.Stop()
+	}
+}
+
 type TeleUser struct {
 	UserId string
 }
@@ -108,7 +115,6 @@ func init() {
 func GetTeleBot(ctx context.Context, botId string) *TeleBot {
 	appkey := GetAppKeyFromCtx(ctx)
 	key := strings.Join([]string{appkey, botId}, "_")
-	fmt.Println("xx:", key)
 	cacheBot, exist := botCache.LoadOrStore(key, &TeleBot{AppKey: appkey, BotId: botId, senderIdMap: &sync.Map{}})
 	if exist {
 		fmt.Println(cacheBot)
@@ -140,22 +146,35 @@ func GetTeleBot(ctx context.Context, botId string) *TeleBot {
 	}
 }
 
-type TeleBotSendBase struct {
-	BotId      string `json:"bot_id"`
-	ReceiverId string `json:"receiver_id"`
+func RemoveTeleBot(ctx context.Context, botId string) {
+	appkey := GetAppKeyFromCtx(ctx)
+	key := strings.Join([]string{appkey, botId}, "_")
+	if val, exist := botCache.LoadAndDelete(key); exist {
+		bot := val.(*TeleBot)
+		bot.Stop()
+	}
 }
 
-type TextMsg struct {
-	TeleBotSendBase
-	Text string `json:"text"`
+func TeleBotAdd(ctx context.Context, req *apimodels.TeleBot) errs.ErrorCode {
+	dao := dbs.TeleBotRelDao{}
+	err := dao.Upsert(dbs.TeleBotRelDao{
+		AppKey:    req.AppKey,
+		TeleBotId: req.TeleBotId,
+		BotToken:  req.BotToken,
+		UserId:    req.UserId,
+	})
+	if err == nil {
+		RemoveTeleBot(ctx, req.TeleBotId)
+		GetTeleBot(ctx, req.TeleBotId)
+	}
+	return errs.ErrorCode_Success
 }
 
-func TeleBotSendText(ctx context.Context, msg *TextMsg) errs.ErrorCode {
-	botId := msg.BotId
-	receiverId := msg.ReceiverId
-	bot := GetTeleBot(ctx, botId)
-	if bot != nil {
-		bot.Send(receiverId, msg.Text)
+func TeleBotDel(ctx context.Context, req *apimodels.TeleBot) errs.ErrorCode {
+	dao := dbs.TeleBotRelDao{}
+	err := dao.Delete(req.AppKey, req.TeleBotId)
+	if err == nil {
+		RemoveTeleBot(ctx, req.TeleBotId)
 	}
 	return errs.ErrorCode_Success
 }

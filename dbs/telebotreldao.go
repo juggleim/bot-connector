@@ -46,3 +46,7 @@ func (rel TeleBotRelDao) QryBots(startId, limit int64) ([]*TeleBotRelDao, error)
 	}
 	return items, nil
 }
+
+func (rel TeleBotRelDao) Delete(appkey, botId string) error {
+	return GetDb().Where("app_key=? and tele_bot_id=?", appkey, botId).Delete(&TeleBotRelDao{}).Error
+}
