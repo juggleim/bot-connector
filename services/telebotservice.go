@@ -156,6 +156,7 @@ func RemoveTeleBot(ctx context.Context, botId string) {
 }
 
 func TeleBotAdd(ctx context.Context, req *apimodels.TeleBot) errs.ErrorCode {
+	start := time.Now()
 	dao := dbs.TeleBotRelDao{}
 	err := dao.Upsert(dbs.TeleBotRelDao{
 		AppKey:    req.AppKey,
@@ -163,9 +164,12 @@ func TeleBotAdd(ctx context.Context, req *apimodels.TeleBot) errs.ErrorCode {
 		BotToken:  req.BotToken,
 		UserId:    req.UserId,
 	})
+	fmt.Println("after db:", time.Since(start))
 	if err == nil {
 		RemoveTeleBot(ctx, req.TeleBotId)
+		fmt.Println("after remove cache:", time.Since(start))
 		GetTeleBot(ctx, req.TeleBotId)
+		fmt.Println("after add cache:", time.Since(start))
 	}
 	return errs.ErrorCode_Success
 }
