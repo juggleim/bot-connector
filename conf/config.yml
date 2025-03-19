@@ -1,4 +1,6 @@
 port: 8070
+domain: http://127.0.0.1:8070
+apiKeySecret: <secret string(length=16)>
 
 log:
   logPath: ./logs
@@ -6,6 +8,6 @@ log:
 
 mysql:
   user: root
-  password: xiaoguang
+  password: 123456
   address: 127.0.0.1:3306
   name: jbot_db

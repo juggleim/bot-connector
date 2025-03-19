@@ -1,12 +1,9 @@
 package apis
 
 import (
-	"bot-connector/dbs"
 	"bot-connector/errs"
 	"bot-connector/services"
-	"bot-connector/services/pbobjs"
 	"bot-connector/utils"
-	"encoding/base64"
 	"net/http"
 	"strings"
 
@@ -39,8 +36,8 @@ func Validate(ctx *gin.Context) {
 		if auth == "aabbcc" {
 			ctx.Set(string(services.CtxKey_AppKey), "appkey")
 		} else {
-			if appkey, ok := CheckAuth(auth); ok {
-				ctx.Set(string(services.CtxKey_AppKey), appkey)
+			if apiKey, err := services.CheckAuth(auth); err == nil {
+				ctx.Set(string(services.CtxKey_AppKey), apiKey.Appkey)
 			} else {
 				ctx.JSON(http.StatusUnauthorized, errs.GetErrorResp(errs.ErrorCode_Unknown))
 				ctx.Abort()
@@ -48,27 +45,4 @@ func Validate(ctx *gin.Context) {
 			}
 		}
 	}
-}
-
-func CheckAuth(apikey string) (string, bool) {
-	bs, err := base64.URLEncoding.DecodeString(apikey)
-	if err != nil {
-		return "", false
-	}
-	authWrap := &pbobjs.ApiKeyWrap{}
-	err = utils.PbUnMarshal(bs, authWrap)
-	if err != nil {
-		return "", false
-	}
-	appkey := authWrap.AppKey
-	dao := dbs.AppInfoDao{}
-	appinfo := dao.FindByAppkey(appkey)
-	if appinfo == nil {
-		return "", false
-	}
-	_, err = utils.AesDecrypt(authWrap.Value, []byte(appinfo.ApiSecureKey))
-	if err != nil {
-		return "", false
-	}
-	return appkey, true
 }

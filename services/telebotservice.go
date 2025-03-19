@@ -2,6 +2,7 @@ package services
 
 import (
 	"bot-connector/apimodels"
+	"bot-connector/configures"
 	"bot-connector/dbs"
 	"bot-connector/errs"
 	"bot-connector/utils"
@@ -64,12 +65,18 @@ func (bot *TeleBot) Start() {
 							nickname = nickname + " " + sender.LastName
 						}
 					}
-					imsdk.AddBot(juggleimsdk.BotInfo{
-						BotId:    senderId,
-						Nickname: nickname,
-						BotType:  0,
-						BotConf:  fmt.Sprintf(`{"api_key":"ChBuc3czc3VlNzJiZWd5djd5GiD_F34yGv8KiCR6RBvqhVW36-u-aigZHO1KvVyqWtapEA==","webhook":"http://ec2-13-229-207-142.ap-southeast-1.compute.amazonaws.com:8070/bot-connector/telebot/events"}`),
-					})
+					apiKey, err := GenerateApiKey(bot.AppKey, bot.BotId, utils.Int642String(sender.ID))
+					if err == nil {
+						imsdk.AddBot(juggleimsdk.BotInfo{
+							BotId:    senderId,
+							Nickname: nickname,
+							BotType:  utils.IntPtr(0),
+							BotConf:  fmt.Sprintf(`{"api_key":"%s","webhook":"%s/bot-connector/telebot/events"}`, configures.Config.Domain, apiKey),
+							ExtFields: map[string]string{
+								"user_tag": "telegram_bot",
+							},
+						})
+					}
 				}
 				imsdk.SendPrivateMsg(juggleimsdk.Message{
 					SenderId:       senderId,
