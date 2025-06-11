@@ -3,8 +3,6 @@ CREATE TABLE IF NOT EXISTS `appinfos` (
   `app_name` varchar(50) DEFAULT NULL,
   `app_key` varchar(50) DEFAULT NULL,
   `app_secret` varchar(50) DEFAULT NULL,
-  `api_secure_key` varchar(50) DEFAULT NULL,
-  `api_url` varchar(200) DEFAULT NULL,
   `app_status` tinyint DEFAULT NULL,
   `created_time` datetime(3) DEFAULT CURRENT_TIMESTAMP(3),
   `updated_time` datetime(3) DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
