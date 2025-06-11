@@ -1,5 +1,5 @@
 port: 8070
-domain: http://127.0.0.1:8070
+
 apiKeySecret: <secret string(length=16)>
 
 log:
@@ -13,3 +13,6 @@ mysql:
   name: jbot_db
 
 imApiDomain: https://api.juggle.im
+
+botConnector:
+  domain: http://127.0.0.1:8070
