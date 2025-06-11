@@ -9,8 +9,6 @@ import (
 type ConnectConfig struct {
 	Port int `yaml:"port"`
 
-	ApiKeySecret string `yaml:"apiKeySecret"`
-
 	Log struct {
 		LogPath string `yaml:"logPath"`
 		LogName string `yaml:"logName"`
@@ -26,7 +24,8 @@ type ConnectConfig struct {
 	ImApiDomain string `yaml:"imApiDomain"`
 
 	BotConnector struct {
-		Domain string `yaml:"domain"`
+		Domain       string `yaml:"domain"`
+		ApiKeySecret string `yaml:"apiKeySecret"`
 	} `yaml:"botConnector"`
 }
 
@@ -40,8 +39,8 @@ func InitConfigures() error {
 	var conf ConnectConfig
 	yaml.Unmarshal(cfBytes, &conf)
 	Config = conf
-	if Config.ApiKeySecret == "" {
-		Config.ApiKeySecret = "1default-apikey1"
+	if Config.BotConnector.ApiKeySecret == "" {
+		Config.BotConnector.ApiKeySecret = "1default-apikey1"
 	}
 	return nil
 }

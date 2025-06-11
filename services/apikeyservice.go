@@ -9,7 +9,7 @@ import (
 )
 
 func CheckAuth(apikey string) (*pbobjs.ApiKey, error) {
-	apiKeySecret := configures.Config.ApiKeySecret
+	apiKeySecret := configures.Config.BotConnector.ApiKeySecret
 	bs, err := base64.URLEncoding.DecodeString(apikey)
 	if err != nil {
 		return nil, err
@@ -34,7 +34,7 @@ func GenerateApiKey(appkey, botId, userId string) (string, error) {
 		CreatedTime: time.Now().UnixMilli(),
 	}
 	bs, _ := utils.PbMarshal(val)
-	encodedBs, err := utils.AesEncrypt(bs, []byte(configures.Config.ApiKeySecret))
+	encodedBs, err := utils.AesEncrypt(bs, []byte(configures.Config.BotConnector.ApiKeySecret))
 	if err != nil {
 		return "", err
 	}
