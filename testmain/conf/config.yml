@@ -1,0 +1,15 @@
+port: 8070
+domain: http://127.0.0.1:8070
+apiKeySecret: 1234567890123456
+
+log:
+  logPath: ./logs
+  logName: bot-connector
+
+mysql:
+  user: root
+  password: 123456
+  address: 127.0.0.1:3306
+  name: jbot_db
+
+imApiDomain: https://api.juggle.im
