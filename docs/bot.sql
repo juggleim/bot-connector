@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `appinfos` (
+CREATE TABLE IF NOT EXISTS `apps` (
   `id` int NOT NULL AUTO_INCREMENT,
   `app_name` varchar(50) DEFAULT NULL,
   `app_key` varchar(50) DEFAULT NULL,

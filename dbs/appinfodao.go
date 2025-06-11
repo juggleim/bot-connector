@@ -13,7 +13,7 @@ type AppInfoDao struct {
 }
 
 func (app AppInfoDao) TableName() string {
-	return "appinfos"
+	return "apps"
 }
 
 func (app AppInfoDao) Create(item AppInfoDao) error {
