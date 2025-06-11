@@ -11,3 +11,5 @@ mysql:
   password: 123456
   address: 127.0.0.1:3306
   name: jbot_db
+
+imApiDomain: https://api.juggle.im
