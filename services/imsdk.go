@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bot-connector/configures"
 	"bot-connector/dbs"
 	"sync"
 
@@ -28,7 +29,7 @@ func GetImSdk(appkey string) *juggleimsdk.JuggleIMSdk {
 			dao := dbs.AppInfoDao{}
 			appinfo := dao.FindByAppkey(appkey)
 			if appinfo != nil {
-				sdk := juggleimsdk.NewJuggleIMSdk(appkey, appinfo.AppSecret, appinfo.ApiUrl)
+				sdk := juggleimsdk.NewJuggleIMSdk(appkey, appinfo.AppSecret, configures.Config.ImApiDomain)
 				imsdkMap.Store(appkey, sdk)
 				return sdk
 			}

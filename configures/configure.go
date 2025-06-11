@@ -7,8 +7,9 @@ import (
 )
 
 type ConnectConfig struct {
-	Domain string `yaml:"domain"`
-	Port   int    `yaml:"port"`
+	Port         int    `yaml:"port"`
+	Domain       string `yaml:"domain"`
+	ApiKeySecret string `yaml:"apiKeySecret"`
 
 	Log struct {
 		LogPath string `yaml:"logPath"`
@@ -22,7 +23,7 @@ type ConnectConfig struct {
 		DbName   string `yaml:"name"`
 	} `yaml:"mysql"`
 
-	ApiKeySecret string `yaml:"apiKeySecret"`
+	ImApiDomain string `yaml:"imApiDomain"`
 }
 
 var Config ConnectConfig
