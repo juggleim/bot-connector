@@ -36,5 +36,8 @@ func InitConfigures() error {
 	var conf ConnectConfig
 	yaml.Unmarshal(cfBytes, &conf)
 	Config = conf
+	if Config.ApiKeySecret == "" {
+		Config.ApiKeySecret = "1default-apikey1"
+	}
 	return nil
 }

@@ -5,9 +5,16 @@ import "fmt"
 type ErrorCode int
 
 const (
-	ErrorCode_Success  ErrorCode = 0
-	ErrorCode_Unknown  ErrorCode = 10000
-	ErrorCode_ParamErr ErrorCode = 10001
+	ErrorCode_Success ErrorCode = 0
+	ErrorCode_Unknown ErrorCode = 10000
+
+	ErrorCode_APPKEY_REQUIRED    ErrorCode = 10001
+	ErrorCode_NONCE_REQUIRED     ErrorCode = 10002
+	ErrorCode_TIMESTAMP_REQUIRED ErrorCode = 10003
+	ErrorCode_SIGNATURE_REQUIRED ErrorCode = 10004
+	ErrorCode_APP_NOT_EXISTED    ErrorCode = 10005
+	ErrorCode_SIGNATURE_FAIL     ErrorCode = 10006
+	ErrorCode_ParamErr           ErrorCode = 10007
 )
 
 type PageInfo struct {
