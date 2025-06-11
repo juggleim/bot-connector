@@ -71,7 +71,7 @@ func (bot *TeleBot) Start() {
 							BotId:    senderId,
 							Nickname: nickname,
 							BotType:  utils.IntPtr(0),
-							BotConf:  fmt.Sprintf(`{"api_key":"%s","webhook":"%s/bot-connector/telebot/events"}`, configures.Config.Domain, apiKey),
+							BotConf:  fmt.Sprintf(`{"api_key":"%s","webhook":"%s/bot-connector/telebot/events"}`, apiKey, configures.Config.Domain),
 							ExtFields: map[string]string{
 								"user_tag": "telegram_bot",
 							},
