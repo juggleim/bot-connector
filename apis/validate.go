@@ -30,11 +30,6 @@ func Validate(ctx *gin.Context) {
 	ctx.Set(string(services.CtxKey_Session), session)
 
 	auth := ctx.Request.Header.Get("Authorization")
-	if auth == "" {
-		ctx.JSON(http.StatusUnauthorized, errs.GetErrorResp(errs.ErrorCode_Unknown))
-		ctx.Abort()
-		return
-	}
 	if auth != "" {
 		if !strings.HasPrefix(auth, "Bearer ") {
 			ctx.JSON(http.StatusUnauthorized, errs.GetErrorResp(errs.ErrorCode_Unknown))
@@ -42,16 +37,12 @@ func Validate(ctx *gin.Context) {
 			return
 		}
 		auth = auth[7:]
-		if auth == "aabbcc" {
-			ctx.Set(string(services.CtxKey_AppKey), "appkey")
+		if apiKey, err := services.CheckAuth(auth); err == nil {
+			ctx.Set(string(services.CtxKey_AppKey), apiKey.Appkey)
 		} else {
-			if apiKey, err := services.CheckAuth(auth); err == nil {
-				ctx.Set(string(services.CtxKey_AppKey), apiKey.Appkey)
-			} else {
-				ctx.JSON(http.StatusUnauthorized, errs.GetErrorResp(errs.ErrorCode_Unknown))
-				ctx.Abort()
-				return
-			}
+			ctx.JSON(http.StatusUnauthorized, errs.GetErrorResp(errs.ErrorCode_Unknown))
+			ctx.Abort()
+			return
 		}
 	} else {
 		appKey := ctx.Request.Header.Get(Header_AppKey)
