@@ -10,7 +10,7 @@ mysql:
   address: 127.0.0.1:3306
   name: jbot_db
 
-imApiDomain: https://api.juggle.im
+imApiDomain: https://api.juggle.im 
 
 botConnector:
   domain: http://127.0.0.1:8070
